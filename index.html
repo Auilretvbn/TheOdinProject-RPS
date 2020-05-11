@@ -7,6 +7,21 @@
 </head>
 
 <body>
+
+    <button class="RPS option" id="rockBTN" type="button">Rock</button>
+    <button class="RPS option" id="paperBTN" type="button">Paper</button>
+    <button class="RPS option" id="scissorsBTN" type="button">Scissors</button>
+
+    <div id="playerPlayed"></div>
+    <div id="computerPlayed"></div>
+    <div id="spacer">---------------------</div>
+    <div id="divResult">///////////////////</div>
+    <div class="spacer">---------------------</div>
+    <div id="score">-Current Score-</div>
+    <div id="computerScore">Computer: 0</div>
+    <div id="playerScore">Player: 0</div>
+
+
     <script>
         function computerPlay() {
             let result;
@@ -44,21 +59,29 @@
 
         function playRound(playerSelection, computerSelection) {
             let stringResult = "";
-
+            let intResult = 0;
             //Ensure string input allows for case insensitivity
             playerSelection = normify(playerSelection);
             computerSelection = normify(computerSelection);
+
+            const docPlayerPlayed = document.querySelector("#playerPlayed");
+            const docComputerPlayed = document.querySelector("#computerPlayed");
+            docPlayerPlayed.textContent = "Player picked - " + playerSelection;
+            docComputerPlayed.textContent = "Computer picked - " + computerSelection;
 
             //All scenarios where player played Rock
             if (playerSelection == "Rock") {
                 if (computerSelection == "Rock") {
                     stringResult = tie(playerSelection);
+                    intResult = 0; //Count tie
                 }
                 else if (computerSelection == "Paper") {
                     stringResult = lose(playerSelection, computerSelection);
+                    intResult = -1; //Count loss
                 }
                 else if (computerSelection == "Scissors") {
                     stringResult = win(playerSelection, computerSelection);
+                    intResult = 1; //Count Win
                 }
                 else {
                     stringResult = "Error in computerSelection";
@@ -68,12 +91,15 @@
             else if (playerSelection == "Paper") {
                 if (computerSelection == "Paper") {
                     stringResult = tie(playerSelection);
+                    intResult = 0;
                 }
                 else if (computerSelection == "Scissors") {
                     stringResult = lose(playerSelection, computerSelection);
+                    intResult = -1;
                 }
                 else if (computerSelection == "Rock") {
                     stringResult = win(playerSelection, computerSelection);
+                    intResult = 1;
                 }
                 else {
                     stringResult = "Error in computerSelection";
@@ -84,12 +110,15 @@
             else if (playerSelection == "Scissors") {
                 if (computerSelection == "Scissors") {
                     stringResult = tie(playerSelection);
+                    intResult = 0;
                 }
                 else if (computerSelection == "Rock") {
                     stringResult = lose(playerSelection, computerSelection);
+                    intResult = -1;
                 }
                 else if (computerSelection == "Paper") {
                     stringResult = win(playerSelection, computerSelection);
+                    intResult = 1;
                 }
                 else {
                     stringResult = "Error in computerSelection";
@@ -100,16 +129,59 @@
                 stringResult = "Error in player input";
             }
 
-            return stringResult;
+            const divResult = document.querySelector('#divResult');
+            divResult.textContent = stringResult;
+
+            return intResult;
         }
 
-        function game() {
-            let input;
-            for (let i = 0; i < 5; i++) {
-                input = prompt("Play Rock Paper or Scissors");
-                console.log(playRound(input, computerPlay()));
-            }
+        // function game() {
+        //     let input;
+        //     for (let i = 0; i < 5; i++) {
+        //         input = prompt("Play Rock Paper or Scissors");
+        //         console.log(playRound(input, computerPlay()));
+        //     }
+        // }
+
+        function update(playerScore, computerScore) {
+            const playerHTMLScore = document.querySelector('#playerScore');
+            const computerHTMLScore = document.querySelector('#computerScore');
+
+            playerHTMLScore.textContent = "Player Score: " + playerScore;
+            computerHTMLScore.textContent = "Computer Score: " + computerScore;
         }
+
+        let playerScore = 0;
+        let computerScore = 0;
+
+        const rockBTN = document.querySelector('#rockBTN');
+        const paperBTN = document.querySelector('#paperBTN');
+        const scissorsBTN = document.querySelector('#scissorsBTN');
+
+
+        rockBTN.addEventListener('click', function (e) {
+            let intResult = playRound("Rock", computerPlay())
+            if (intResult == 1) playerScore++;
+            else if (intResult == -1) computerScore++;
+            update(playerScore, computerScore);
+        });
+
+        paperBTN.addEventListener('click', function (e) {
+            let intResult = playRound("Paper", computerPlay())
+            if (intResult == 1) playerScore++;
+            else if (intResult == -1) computerScore++;
+            update(playerScore, computerScore);
+        });
+
+        scissorsBTN.addEventListener('click', function (e) {
+            let intResult = playRound("Scissors", computerPlay())
+            if (intResult == 1) playerScore++;
+            else if (intResult == -1) computerScore++;
+            update(playerScore, computerScore);
+        });
+        
+
+
     </script>
 </body>
 
